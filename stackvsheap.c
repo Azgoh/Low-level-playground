@@ -19,7 +19,7 @@ to reclaim unused memory.
 int main(void){
 
     int a = 10; //stack
-    int b = 20; // tack
+    int b = 20; //stack
     int *p = malloc(4); //heap
     *p = 30;
 
