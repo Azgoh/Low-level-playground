@@ -2,6 +2,8 @@
 #include <stdlib.h>
 
 /*
+Example of dynamic memory allocation on the heap.
+Shows malloc and free and how each allocation gets a unique address.
 */
 
 int main(void){
