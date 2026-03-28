@@ -65,4 +65,3 @@ To manage the stacks, two registers are used:
 ...
 0x7fffffffffff <-- higher address (bottom of stack)
 ```
-
