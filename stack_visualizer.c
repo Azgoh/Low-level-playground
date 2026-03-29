@@ -21,7 +21,8 @@ local2 is at a higher address(0x7ffd3ee4df24) than local1(0x7ffd3ee4df20).
 This happens because the exact layout of local variables in memory is not strictly defined by the C standard and is decided by the compiler. 
 The compiler may reorder variables or insert padding to satisfy alignment and optimization requirements.
 
-Let's now compare with the assembly we get by running objdump -d bin/stack_visualizer | grep -A20 "<foo>":
+Let's now compare with the assembly we get by running objdump -d bin/stack_visualizer | grep -A20 "<foo>". The default syntax is AT&T, 
+if you want the output to be in Intel syntax run objdump -d -M intel bin/stack_visualizer | grep -A20 "<foo>":
     1169:       f3 0f 1e fa             endbr64
     116d:       55                      push   %rbp                 old rbp saved on the stack
     116e:       48 89 e5                mov    %rsp,%rbp            new stack frame starts
