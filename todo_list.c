@@ -2,7 +2,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-
 typedef struct{
     char *title;
     int done; // 0 = not done, 1 = done
