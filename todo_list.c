@@ -79,9 +79,65 @@ void freeTodoList(TodoList *list){
     free(list->tasks);
 }
 
+void saveTodoList(TodoList *list, const char *filename){
+    FILE *file = fopen(filename, "wb"); // write binary mode
+
+    if(!file){
+        printf("Failed to open file for writing\n");
+        return;
+    }
+    
+    fwrite(&list->size, sizeof(int), 1, file);
+
+    for(int i = 0; i<list->size; i++){
+        size_t len = strlen(list->tasks[i].title) + 1; // title size + null terminator
+        fwrite(&len, sizeof(size_t), 1, file); 
+        fwrite(list->tasks[i].title, sizeof(char), len, file); 
+        fwrite(&list->tasks[i].done, sizeof(int), 1, file);  
+    }
+
+    fclose(file);
+    printf("Tasks saved to %s\n", filename);
+}
+
+void loadTodoList(TodoList *list, const char *filename){
+    FILE *file = fopen(filename, "rb"); // read binary mode
+    
+    if(!file){
+        printf("Failed to open file for reading\n");
+        return;
+    }
+
+    freeTodoList(list);
+    initTodoList(list);
+
+    int taskCount;
+    fread(&taskCount, sizeof(int), 1, file);
+
+    for(int i = 0; i < taskCount; i++){
+        size_t len;
+        fread(&len, sizeof(size_t), 1, file);
+
+        char *title = malloc(len);
+        fread(title, sizeof(char), len, file);
+
+        int done;
+        fread(&done, sizeof(int), 1, file);
+
+        addTask(list, title);
+        list->tasks[i].done = done;
+
+        free(title);
+    }
+
+    fclose(file);
+    printf("Tasks loaded from %s\n", filename);
+}
+
 int main(int argc, char **argv){
     TodoList myList;
     initTodoList(&myList);
+    loadTodoList(&myList, "tasks.dat");
 
     int choice;
     char buffer[256];
@@ -118,6 +174,7 @@ int main(int argc, char **argv){
             listTasks(&myList);
             break;
         case 5: 
+            saveTodoList(&myList, "tasks.dat");
             freeTodoList(&myList);
             printf("Goodbye!\n");
             return 0;
