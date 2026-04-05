@@ -87,3 +87,50 @@
 - Upon completion of executing an instruction, the CPU goes to memory and fetches the next machine instruction in sequence. The CPU has a **register** called the **EIP** or **Extended Instruction Pointer**, that contains the address of the next instruction to be fetched from memory and then executed.
 - If we controlled the flow EIP, we can alter the program to do things it was not intended to do. This is a popular technique upon which malware operates. 
 - The entire fetch and execute process is tied to the system clock which is an oscillator that emits square-wave pulses at precise intervals.
+
+## Part 10: General-purpose Registers
+
+- The general-purpose registers are used to temporarily store data as it is processed on the processor. We will focus on 32-bit x86 architecture.
+- Each new version of general-purpose registers is crated to be backward compatible with previous processors. This means that code utilizing 8-bit register on the 8080 chips will still function on today's 64-bit chipset.
+- General-purpose registers can be used to hold any type of data. Some have acquired a specific use in programs. The 8 general-purpose registers in IA-32 architecture are the following:
+    - **EAX**: Main register used in arithmetic operations. Also known as accumulator, as it holds results of arithmetic operations and function return values.
+    - **EBX**: The Base Register. Pointer to data in the DS segment. Used to store the base address of the program.
+    - **ECX**: The Counter register is often used to hold a value representing the number of times a process is to be repeated. Used for loop and string operations.
+    - **EDX**: A general purpose register. Additionally used for I/O operations. In addition will extend EAX to 64-bits.
+    - **ESI**: Source Index register. Pointer to data in the segment pointed to by the DS register. Used as an offset address in string and array operations. It golds the address from where to read the data.
+    - **EDI**: Destination Index register. Pointer to data (or destination) in the segment pointed to by the ES register. Used as an offset address in string and array operations. It holds the implied write address of all string operations. 
+    - **EBP**: Base Pointer. Pointer to data on the stack (in the SS segment). It points to the bottom of the current stack frame. It is used to reference local variables.
+    - **ESP**: Stack Pointer (in the SS segment). It points to the top of the current stack frame. It is used to reference local variables.
+- Each of the above registers is 32-bit in length or 4 bytes in length.
+- Each of the lower 2 bytes of the EAX, EBX, EXC and EDX registers can be referenced by AX and then subdivided by the names AH, BH, CH and DH for for high bytes and AL, BL, CL and DL for the low bytes which are 1 byte each.
+- The ESI, EDI, EBP, ESP can be referenced by their 16-bit equivalent which is SI, DI, BP, SP.
+- Take a look at the tutorial for visual representation. 
+
+## Part 11: Segment Registers
+
+- The segment registers are used specifically for referencing memory locations. There are three different methods of accessing system memory of which we will focus on the flat memory model. 
+- There are six segment registers which are as follows:
+    - **CS**: Code segment register stores the base location of the code section (.text section) which is used for data access.
+    - **DS**: Data segment register stores the default location for variables (.data section) which is used for data access.
+    - **ES**: Extra segment register which is used during string operations.
+    - **SS**: Stack segment register stores the base location of the stack segment and is used when implicitly using the stack pointer or when explicitly using the base pointer.
+    - **FS**: Extra segment register.
+    - **GS**: Extra segment register.
+- Each segment register is 16-bits and contains the pointer to the start of the memory-specific segment.
+- The CS register contains the pointer to the code segment in memory. The code segment is where the instruction codes are stored in memory. 
+- The processor retrieves instruction codes from memory, based on the CS register value and an offset value contained in the instruction pointer (EIP) register.
+- No program can explicitly load or change the CS register. The processor assigns its values as the program is assigned a memory space. 
+- The DS, ES, FS and GS segment registers are all used to point to data segments. Each of the four separate data segments help the program separate data elements to ensure that they do not overlap. 
+- The program loads the data segment registers with the appropriate pointer value for the segments and then reference individual memory locations using an offset value. 
+- The stack segment register (SS) is used to point to the stack segment. The stack contains data values passed to functions and procedures within the program. 
+- Segment registers are considered part of the OS and can neither read nor be changed directly in almost all cases.
+- When working in the protected mode flat model (x86 32bit architecture), your program runs and receives a 4GB address space to which any 32-bit register can potentially address any of the four billion memory locations except for those protected areas defined by the OS.
+- Physical memory may be larger than 4GB, however a 32-bit register can only express 4.294.967.296(2^32) different locations. 
+- If you have more than 4GB of memory in your computer, the OS must arrange a 4GB region within memory and your programs are limited to that new region. This task is completed by the segment registers and the OS keeps close control of this.
+
+## Part 12: Instruction Pointer Register
+
+- The instruction pointer register called the EIP register is the most important register we deal with in reverse engineering. 
+- The EIP keeps track of the next instruction code to execute. EIP points to the next instruction to execute. 
+- If you were to alter that pointer to jump to another area in the code, you have complete control over that program.
+- Check the tutorial for an example on the EIP register.
